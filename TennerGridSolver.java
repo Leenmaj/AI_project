@@ -17,17 +17,23 @@ public class TennerGridSolver {
     }
 
     public boolean solve(char type) {
+        long startTime = 0;
+
+        long endTime = 0;
 
         boolean solved = false;
-        // boolean solved = backtrack(0, 0);
 
         switch (type) {
             case 'B':
+                startTime = System.nanoTime();
                 solved = backtrack(0, 0);
+                endTime = System.nanoTime();
                 break;
 
             case 'F':
+                startTime = System.nanoTime();
                 solved = backtrackWithForwardChecking(0, 0);
+                endTime = System.nanoTime();
                 break;
             case 'M':
                 // solved= MRV method
@@ -38,6 +44,9 @@ public class TennerGridSolver {
         if (!solved)
             System.out.println("No solution found.");
 
+        else {
+            System.out.println("Time solving :  " + (endTime - startTime) / 1000000.0 + " milliseconds");
+        }
         return solved;
     }
 

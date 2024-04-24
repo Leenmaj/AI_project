@@ -13,6 +13,8 @@ public class TennerGridGenerator {
     public TennerGridGenerator() {
         // initialise the grid with variables
         this.grid = new Variable[rows][10];
+
+        // this is temporary will be replaced with random generation
         int testGrid[][] = {
                 { -1, 6, 2, 0, -1, -1, -1, 8, 5, 7 },
                 { -1, 0, 1, 7, 8, -1, -1, -1, 9, -1 },

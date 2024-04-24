@@ -14,6 +14,19 @@ public class Variable {
         }
     }
 
+    public Variable(int value, int[] domain, int domSize, boolean filledCell) {
+        this.value = value;
+        this.domSize = domSize;
+        this.domain = new int[domSize];
+        for (int i = 0; i < domSize; i++) {
+            this.domain[i] = domain[i];
+
+        }
+
+        this.filledCell = filledCell;
+
+    }
+
     public Variable(int x) {
 
         this.value = x;// -1 represents an unassigned variable

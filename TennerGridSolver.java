@@ -3,21 +3,40 @@ public class TennerGridSolver {
     int[] sums; // goal sums for each column
     int rows;
 
-    public TennerGridSolver(int rows, int[] Sums, Variable[][] grid) {
+    public TennerGridSolver(int rows, int[] Sums, Variable[][] unsolvedGrid) {
         this.rows = rows;
-        this.grid = grid;
+        this.grid = new Variable[rows][10];
         this.sums = Sums;
+
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < 10; j++) {
+                this.grid[i][j] = new Variable(unsolvedGrid[i][j].value, unsolvedGrid[i][j].domain,
+                        unsolvedGrid[i][j].domSize, unsolvedGrid[i][j].filledCell);
+            }
 
     }
 
-    public boolean solve() {
-        boolean solved = backtrackWithForwardChecking(0, 0);
+    public boolean solve(char type) {
+
+        boolean solved = false;
         // boolean solved = backtrack(0, 0);
-        if (solved) {
-            // printGrid(); // p rint the grid if solved
-        } else {
-            System.out.println("No solution found.");
+
+        switch (type) {
+            case 'B':
+                solved = backtrack(0, 0);
+                break;
+
+            case 'F':
+                solved = backtrackWithForwardChecking(0, 0);
+                break;
+            case 'M':
+                // solved= MRV method
+            default:
+                break;
         }
+        if (!solved)
+            System.out.println("No solution found.");
+
         return solved;
     }
 
@@ -49,10 +68,13 @@ public class TennerGridSolver {
             return verifySums();
         if (col == 10)
             return backtrack(row + 1, 0);
+        if (grid[row][col].filledCell)
+            return backtrack(row, col + 1);
 
         for (int i = 0; i < grid[row][col].domSize; i++) {
             int val = grid[row][col].domain[i];
-            ForwardChecking(row, col);
+
+            // ForwardChecking(row, col);
 
             if (isSafe(row, col, val)) {
                 grid[row][col].value = val;

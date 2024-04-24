@@ -11,4 +11,21 @@ public class Variable {
             this.domain[i] = i; // initialise domain with all possible values
         }
     }
+
+
+
+
+    void removeFromDomain(int x) {
+        for (int i = 0; i < domSize; i++)
+            if (domain[i] == x) {
+                for (int j = i + 1; j < domSize; j++) {
+                    domain[j - 1] = domain[j];
+                }
+                domSize--;
+                break;
+            }
+
+    }
+
+
 }

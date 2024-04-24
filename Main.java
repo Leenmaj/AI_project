@@ -1,5 +1,6 @@
 public class Main {
     public static void main(String[] args) {
+
         TennerGridGenerator generator = new TennerGridGenerator();
         System.out.println("generated column sums for the tenner grid:");
         generator.printSums();

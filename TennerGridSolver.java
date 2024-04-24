@@ -34,6 +34,7 @@ public class TennerGridSolver {
             default:
                 break;
         }
+
         if (!solved)
             System.out.println("No solution found.");
 
@@ -74,7 +75,7 @@ public class TennerGridSolver {
         for (int i = 0; i < grid[row][col].domSize; i++) {
             int val = grid[row][col].domain[i];
 
-            // ForwardChecking(row, col);
+            ForwardChecking(row, col);
 
             if (isSafe(row, col, val)) {
                 grid[row][col].value = val;

@@ -3,24 +3,18 @@ public class TennerGridSolver {
     int[] sums; // goal sums for each column
     int rows;
 
-    public TennerGridSolver(int rows, int[] Sums) {
+    public TennerGridSolver(int rows, int[] Sums, Variable[][] grid) {
         this.rows = rows;
-        this.grid = new Variable[rows][10];
+        this.grid = grid;
         this.sums = Sums;
 
-        // initialise the grid with variables
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < 10; j++) {
-                this.grid[i][j] = new Variable();
-            }
-        }
     }
 
     public boolean solve() {
         boolean solved = backtrackWithForwardChecking(0, 0);
         // boolean solved = backtrack(0, 0);
         if (solved) {
-            printGrid(); // p rint the grid if solved
+            // printGrid(); // p rint the grid if solved
         } else {
             System.out.println("No solution found.");
         }
@@ -28,10 +22,13 @@ public class TennerGridSolver {
     }
 
     public boolean backtrack(int row, int col) {
+
         if (row == rows)
             return verifySums();
         if (col == 10)
             return backtrack(row + 1, 0);
+        if (grid[row][col].filledCell)
+            return backtrack(row, col + 1);
 
         for (int i = 0; i < grid[row][col].domSize; i++) {
             int val = grid[row][col].domain[i];
@@ -189,7 +186,7 @@ public class TennerGridSolver {
     public void printGrid() {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < 10; col++) {
-                System.out.print(grid[row][col].value + " ");
+                System.out.printf("%4d", grid[row][col].value);
             }
             System.out.println();
         }

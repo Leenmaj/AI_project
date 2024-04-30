@@ -43,7 +43,7 @@ public class TennerGridGenerator {
     public void generator() {
         int rowAssignment[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-        // Fill the the first row with values randomaly
+        // Fill the the first row with values shuffled randomly
         shuffleArray(rowAssignment);
         for (int i = 0; i < 10; i++) {
             grid[0][i] = new Variable(rowAssignment[i]);

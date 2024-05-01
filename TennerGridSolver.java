@@ -121,41 +121,6 @@ public class TennerGridSolver {
 
     }
 
-    public void printCurrentState() {
-        System.out.println("Current grid state:");
-        // Iterate through each row and column of the grid
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < 10; col++) {
-                /*
-                 * print the value of each variable in the grid
-                 * if the value is -1 print underscore
-                 */
-                System.out.print((grid[row][col].value >= 0 ? grid[row][col].value : "_") + "  ");
-            }
-            System.out.println();
-        }
-        System.out.println("-----------------------------");
-
-        // calculate and print the current sum for each column
-        for (int col = 0; col < 10; col++) {
-            int currSum = 0;
-            for (int row = 0; row < rows; row++) {
-                if (grid[row][col].value >= 0) { // only add up assigned values
-                    currSum += grid[row][col].value;
-                }
-            }
-            System.out.print(currSum + " "); // the current sum for the column
-        }
-        System.out.println();
-
-        // print the goal sum for each column
-        System.out.println("goal sums:");
-        for (int i = 0; i < sums.length; i++) {
-            System.out.print(sums[i] + " ");
-        }
-        System.out.println("\n-----------------------------");
-    }
-
     public boolean isSafe(int row, int col, int value) {
         if (row == 0 && value == sums[col])
             return false;
@@ -240,4 +205,41 @@ public class TennerGridSolver {
         System.out.println("\n");
     }
 
+    /*
+     * public void printCurrentState() {
+     * System.out.println("Current grid state:");
+     * Iterate through each row and column of the grid
+     * for (int row = 0; row < rows; row++) {
+     * for (int col = 0; col < 10; col++) {
+     * 
+     * print the value of each variable in the grid
+     * if the value is -1 print underscore
+     * 
+     * System.out.print((grid[row][col].value >= 0 ? grid[row][col].value : "_") +
+     * "  ");
+     * }
+     * System.out.println();
+     * }
+     * System.out.println("-----------------------------");
+     * 
+     * calculate and print the current sum for each column
+     * for (int col = 0; col < 10; col++) {
+     * int currSum = 0;
+     * for (int row = 0; row < rows; row++) {
+     * if (grid[row][col].value >= 0) { only add up assigned values
+     * currSum += grid[row][col].value;
+     * }
+     * }
+     * System.out.print(currSum + " "); the current sum for the column
+     * }
+     * System.out.println();
+     * 
+     * print the goal sum for each column
+     * System.out.println("goal sums:");
+     * for (int i = 0; i < sums.length; i++) {
+     * System.out.print(sums[i] + " ");
+     * }
+     * System.out.println("\n-----------------------------");
+     * }
+     */
 }

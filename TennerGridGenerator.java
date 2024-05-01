@@ -7,8 +7,6 @@ public class TennerGridGenerator {
     Random rand = new Random();
     final int rows = 3;
     final int totalSum = 45 * rows; // total sum for all columns need to be 135 to be feasible to solvee
-    final int minSum = 3; // min possible column sum (0+1+2)
-    final int maxSum = 24; // max possible column sum (7+8+9)
 
     public TennerGridGenerator() {
         // initialise the grid
@@ -95,10 +93,6 @@ public class TennerGridGenerator {
         }
     }
 
-    public int[] getSums() {
-        return sums;
-    }
-
     public void hideCells() {
         /*
          * Randomly hide cells within the grid, with a likelihood ranging from 40% to
@@ -117,6 +111,35 @@ public class TennerGridGenerator {
         }
     }
 
+    
+    public void printGrid() {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < 10; col++) {
+                if (grid[row][col].value == -1)
+                    System.out.printf("%4s", "-");
+                else
+
+                    System.out.printf("%4d", grid[row][col].value);
+            }
+            System.out.println();
+
+        }
+        System.out.println("  - - - - - - - - - - - - - - - - - - - - ");
+
+        printSums();
+    }
+
+    public void printSums() {
+
+        for (int summation : sums) {
+            System.out.printf("%4d", summation);
+        }
+        System.out.println("\n");
+    }
+
+
+
+    
     // remove
     public void generator() {
         int rowAssignment[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -215,28 +238,4 @@ public class TennerGridGenerator {
          */
     }
 
-    public void printGrid() {
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < 10; col++) {
-                if (grid[row][col].value == -1)
-                    System.out.printf("%4s", "-");
-                else
-
-                    System.out.printf("%4d", grid[row][col].value);
-            }
-            System.out.println();
-
-        }
-        System.out.println("  - - - - - - - - - - - - - - - - - - - - ");
-
-        printSums();
-    }
-
-    public void printSums() {
-
-        for (int summation : sums) {
-            System.out.printf("%4d", summation);
-        }
-        System.out.println("\n");
-    }
 }

@@ -2,8 +2,7 @@ public class Variable {
     int value; // Current value assigned to the variable (-1 for unassigned)
     int[] domain; // Possible values the variable can take
     int domSize; // Size of the domain (number of possible values)
-
-    Boolean filledCell;
+    Boolean filledCell;// Was a value assigned to the cell during the grid generation process?
 
     public Variable() {
         this.value = -1; // -1 represents an unassigned variable

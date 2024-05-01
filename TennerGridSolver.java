@@ -218,12 +218,14 @@ public class TennerGridSolver {
     public void printGrid() {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < 10; col++) {
-                System.out.printf("%4d", grid[row][col].value);
+                if (grid[row][col].value == -1)
+                    System.out.printf("%4s", "-");
+                else
+
+                    System.out.printf("%4d", grid[row][col].value);
             }
             System.out.println();
         }
     }
-
-
 
 }

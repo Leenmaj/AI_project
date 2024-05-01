@@ -99,20 +99,12 @@ public class TennerGridGenerator {
         return sums;
     }
 
-    public void printSums() {
-
-        for (int summation : sums) {
-            System.out.printf("%4d", summation);
-        }
-        System.out.println("\n");
-    }
-
     public void hideCells() {
         /*
          * Randomly hide cells within the grid, with a likelihood ranging from 40% to
          * 70%. This selection is arbitrary,
          * aimed at achieving a diverse array of grids that avoid extreme levels of
-         * crowding or emptiness most of the time.
+         * crowding or emptiness most of the.
          */
 
         double hideCellProb = 0.4 + (0.7 - 0.4) * rand.nextDouble();
@@ -233,6 +225,18 @@ public class TennerGridGenerator {
                     System.out.printf("%4d", grid[row][col].value);
             }
             System.out.println();
+
         }
+        System.out.println("  - - - - - - - - - - - - - - - - - - - - ");
+
+        printSums();
+    }
+
+    public void printSums() {
+
+        for (int summation : sums) {
+            System.out.printf("%4d", summation);
+        }
+        System.out.println("\n");
     }
 }

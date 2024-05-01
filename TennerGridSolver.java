@@ -225,7 +225,19 @@ public class TennerGridSolver {
                     System.out.printf("%4d", grid[row][col].value);
             }
             System.out.println();
+
         }
+        System.out.println("  - - - - - - - - - - - - - - - - - - - - ");
+
+        printSums();
+    }
+
+    public void printSums() {
+
+        for (int summation : sums) {
+            System.out.printf("%4d", summation);
+        }
+        System.out.println("\n");
     }
 
 }

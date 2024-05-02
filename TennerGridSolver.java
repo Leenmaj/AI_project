@@ -125,13 +125,15 @@ public class TennerGridSolver {
         }
         // remove
         for (int i = col + 1; i < 10; i++) {
-            grid[row][i].removeFromDomain(value);
+            if (grid[row][i].value == -1)
+                grid[row][i].removeFromDomain(value);
         }
         for (int[] d : directions) {
             int drow = row + d[0];
             int dcol = col + d[1];
             if (drow >= 0 && drow < rows && dcol >= 0 && dcol < 10) {
-                grid[drow][dcol].removeFromDomain(value);
+                if (grid[drow][dcol].value == -1)
+                    grid[drow][dcol].removeFromDomain(value);
             }
         }
 
@@ -157,7 +159,8 @@ public class TennerGridSolver {
 
         copygrid(gridClone, grid);
         // Try all remaining values for the MRV cell
-        for (int i = 0; i < grid[row][col].domSize; i++) {
+        int size = grid[row][col].domSize;
+        for (int i = 0; i < size; i++) {
 
             int val = grid[row][col].domain[i];
             if (isSafe(row, col, val)) {

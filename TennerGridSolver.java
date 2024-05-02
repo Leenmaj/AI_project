@@ -36,8 +36,9 @@ public class TennerGridSolver {
                 endTime = System.nanoTime();
                 break;
             case 'M':
+                int indices[] = findMRV();
                 startTime = System.nanoTime();
-                solved = ForwardCheckingwithMRV(0, 0);
+                solved = ForwardCheckingwithMRV(indices[0], indices[1]);
                 endTime = System.nanoTime();
                 break;
             default:
@@ -93,7 +94,7 @@ public class TennerGridSolver {
                 if (ForwardChecking(row, col)) {
                     if (backtrackWithForwardChecking(row, col + 1))
                         return true;
-                    grid = gridClone;
+                    copygrid(grid, gridClone);
 
                 }
 
@@ -112,7 +113,7 @@ public class TennerGridSolver {
 
         }
 
-        int[][] directions = { { 1, -1 }, { 1, 0 }, { 1, 1 } };
+        int[][] directions = { { 1, -1 }, { 1, 0 }, { 1, 1 }, { -1, -1 }, { -1, 0 }, { -1, 1 } };
 
         for (int[] d : directions) {
             int drow = row + d[0];
@@ -140,44 +141,38 @@ public class TennerGridSolver {
 
     public boolean ForwardCheckingwithMRV(int row, int col) {
 
-        if (row == rows)
+        int unfilled = 0;
+
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < 10; j++)
+                if (grid[i][j].value == -1)
+                    unfilled++;
+
+        if (unfilled == 0) {
             return verifySums();
-        if (col == 10)
-            return ForwardCheckingwithMRV(row + 1, 0);
-        if (grid[row][col].filledCell)
-            return ForwardCheckingwithMRV(row, col + 1);
-
-        // Find cell with minimum remaining values
-        int MRV = Integer.MAX_VALUE;
-        int mrvRow = -1, mrvCol = -1;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < 10; j++) {
-                if (grid[i][j].value == -1) {
-                    int min = grid[i][j].domSize;
-                    if (min < MRV) {
-                        MRV = min;
-                        mrvRow = i;
-                        mrvCol = j;
-                    }
-                }
-            }
         }
-        Variable[][] gridClone = new Variable[rows][10];
-        copygrid(gridClone, grid);
+        // Find cell with minimum remaining values
 
+        Variable[][] gridClone = new Variable[rows][10];
+
+        copygrid(gridClone, grid);
         // Try all remaining values for the MRV cell
-        for (int val = 0; val < grid[mrvRow][mrvCol].domSize; val++) {
-            // Check if the value is safe before assigning
-            if (isSafe(mrvRow, mrvCol, grid[mrvRow][mrvCol].domain[val])) {
-                grid[mrvRow][mrvCol].value = grid[mrvRow][mrvCol].domain[val];
-                if (ForwardChecking(mrvRow, mrvCol)) { // Call ForwardChecking here
-                    if (ForwardCheckingwithMRV(row, col + 1))
+        for (int i = 0; i < grid[row][col].domSize; i++) {
+
+            int val = grid[row][col].domain[i];
+            if (isSafe(row, col, val)) {
+                grid[row][col].value = val;
+                if (ForwardChecking(row, col)) { // Call ForwardChecking here
+                    int[] indices = findMRV();
+                    int mrvRow = indices[0];
+                    int mrvCol = indices[1];
+                    if (ForwardCheckingwithMRV(mrvRow, mrvCol))
                         return true;
                 }
 
+                copygrid(grid, gridClone);
             }
 
-            copygrid(grid, gridClone);
         }
 
         return false;

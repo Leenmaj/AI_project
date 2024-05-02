@@ -36,8 +36,9 @@ public class TennerGridSolver {
                 endTime = System.nanoTime();
                 break;
             case 'M':
+                int indices[] = findMRV();
                 startTime = System.nanoTime();
-                solved = ForwardCheckingwithMRV(0, 0);
+                solved = ForwardCheckingwithMRV(indices[0], indices[1]);
                 endTime = System.nanoTime();
                 break;
             default:
@@ -83,17 +84,20 @@ public class TennerGridSolver {
             return backtrackWithForwardChecking(row + 1, 0);
         if (grid[row][col].filledCell)
             return backtrackWithForwardChecking(row, col + 1);
-
         for (int i = 0; i < grid[row][col].domSize; i++) {
             int val = grid[row][col].domain[i];
-
-            ForwardChecking(row, col);
+            Variable[][] gridClone = new Variable[rows][10];
+            copygrid(gridClone, grid);
 
             if (isSafe(row, col, val)) {
                 grid[row][col].value = val;
-                if (backtrackWithForwardChecking(row, col + 1))
-                    return true;
-                grid[row][col].value = -1; // backtracking step
+                if (ForwardChecking(row, col)) {
+                    if (backtrackWithForwardChecking(row, col + 1))
+                        return true;
+                    grid = gridClone;
+
+                }
+
             }
         }
 
@@ -102,21 +106,32 @@ public class TennerGridSolver {
 
     public boolean ForwardChecking(int row, int col) {
         int value = grid[row][col].value;
-        int[][] directions = { { 1, -1 }, { 1, 0 }, { 1, 1 } };
+        // check that no varible would have domain size =0
         for (int i = col + 1; i < 10; i++) {
-            grid[row][i].removeFromDomain(value);
-
-            if (grid[row][i].domSize == 0)
+            if (grid[row][i].noPossibleAssignment(value))
                 return false;
 
+        }
+
+        int[][] directions = { { 1, -1 }, { 1, 0 }, { 1, 1 } };
+
+        for (int[] d : directions) {
+            int drow = row + d[0];
+            int dcol = col + d[1];
+            if (drow >= 0 && drow < rows && dcol >= 0 && dcol < 10) {
+                if (grid[drow][dcol].noPossibleAssignment(value))
+                    return false;
+            }
+        }
+        // remove
+        for (int i = col + 1; i < 10; i++) {
+            grid[row][i].removeFromDomain(value);
         }
         for (int[] d : directions) {
             int drow = row + d[0];
             int dcol = col + d[1];
             if (drow >= 0 && drow < rows && dcol >= 0 && dcol < 10) {
                 grid[drow][dcol].removeFromDomain(value);
-                if (grid[drow][dcol].domSize == 0)
-                    return false;
             }
         }
 
@@ -167,17 +182,6 @@ public class TennerGridSolver {
         }
 
         return false;
-    }
-
-    public int countRemainingValues(int row, int col) {
-        // RV stands for remaining values , counter counts how many valid value remained
-        // in cell i,j
-        int RVCounter = 0;
-        for (int k : grid[row][col].domain) {
-            if (isSafe(row, col, k))
-                RVCounter++;
-        }
-        return RVCounter;
     }
 
     public boolean isSafe(int row, int col, int value) {
@@ -308,6 +312,27 @@ public class TennerGridSolver {
                 gridClone[i][j] = new Variable(grid[i][j].value, grid[i][j].domain,
                         grid[i][j].domSize, grid[i][j].filledCell);
             }
+    }
+
+    int[] findMRV() {
+        int MRV = Integer.MAX_VALUE;
+        int mrvRow = -1, mrvCol = -1;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (grid[i][j].value == -1) {
+                    int min = grid[i][j].domSize;
+                    if (min < MRV) {
+                        MRV = min;
+                        mrvRow = i;
+                        mrvCol = j;
+                    }
+                }
+            }
+        }
+
+        int indices[] = { mrvRow, mrvCol };
+        return indices;
+
     }
 
 }

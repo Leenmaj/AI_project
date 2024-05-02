@@ -55,4 +55,13 @@ public class Variable {
 
     }
 
+    boolean noPossibleAssignment(int x) {
+        if (domain[0] == x && domSize == 1 && !filledCell) {
+            return true;
+        }
+
+        return false;
+
+    }
+
 }

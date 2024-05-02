@@ -2,7 +2,7 @@ public class TennerGridSolver {
     Variable[][] grid; // grid of variables
     int[] sums; // goal sums for each column
     int rows;
-
+    int assignments =0 ;
     public TennerGridSolver(int rows, int[] Sums, Variable[][] unsolvedGrid) {
         this.rows = rows;
         this.grid = new Variable[rows][10];
@@ -25,17 +25,20 @@ public class TennerGridSolver {
 
         switch (type) {
             case 'B':
+                assignments=0;
                 startTime = System.nanoTime();
                 solved = backtrack(0, 0);
                 endTime = System.nanoTime();
                 break;
 
             case 'F':
+                assignments=0;
                 startTime = System.nanoTime();
                 solved = backtrackWithForwardChecking(0, 0);
                 endTime = System.nanoTime();
                 break;
             case 'M':
+                assignments=0;
                 startTime = System.nanoTime();
                 solved = ForwardCheckingwithMRV(0, 0);
                 endTime = System.nanoTime();
@@ -49,6 +52,9 @@ public class TennerGridSolver {
 
         else {
             System.out.println("Time solving :  " + (endTime - startTime) / 1000000.0 + " milliseconds");
+
+             System.out.println("Number of assignments :  " + assignments );
+
         }
         return solved;
     }
@@ -67,9 +73,11 @@ public class TennerGridSolver {
 
             if (isSafe(row, col, val)) {
                 grid[row][col].value = val;
+                    assignments++;
                 if (backtrack(row, col + 1))
                     return true;
                 grid[row][col].value = -1; // backtracking step
+                    assignments++;
             }
         }
 
@@ -91,9 +99,11 @@ public class TennerGridSolver {
 
             if (isSafe(row, col, val)) {
                 grid[row][col].value = val;
+                    assignments++;
                 if (backtrackWithForwardChecking(row, col + 1))
                     return true;
                 grid[row][col].value = -1; // backtracking step
+                   assignments++;
             }
         }
 
@@ -156,6 +166,7 @@ public class TennerGridSolver {
             // Check if the value is safe before assigning
             if (isSafe(mrvRow, mrvCol, grid[mrvRow][mrvCol].domain[val])) {
                 grid[mrvRow][mrvCol].value = grid[mrvRow][mrvCol].domain[val];
+                                    assignments++;
                 if (ForwardChecking(mrvRow, mrvCol)) { // Call ForwardChecking here
                     if (ForwardCheckingwithMRV(row, col + 1))
                         return true;
@@ -164,6 +175,7 @@ public class TennerGridSolver {
             }
 
             copygrid(grid, gridClone);
+                assignments++;
         }
 
         return false;

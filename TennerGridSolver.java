@@ -82,7 +82,7 @@ public class TennerGridSolver {
         if (col == 10)
             return backtrackWithForwardChecking(row + 1, 0);
         if (grid[row][col].filledCell)
-            return backtrack(row, col + 1);
+            return backtrackWithForwardChecking(row, col + 1);
 
         for (int i = 0; i < grid[row][col].domSize; i++) {
             int val = grid[row][col].domain[i];

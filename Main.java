@@ -30,7 +30,7 @@ public class Main {
 
         if (solver3.solve('M')) {
             System.out.println("Solved Tenner grid with MRV");
-            solver2.printGrid();
+            solver3.printGrid();
 
         } else {
             System.out.println("failed to solve the tenner grid with MRV");

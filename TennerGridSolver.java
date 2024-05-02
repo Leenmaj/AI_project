@@ -2,8 +2,9 @@ public class TennerGridSolver {
     Variable[][] grid; // grid of variables
     int[] sums; // goal sums for each column
     int rows;
-    int consistency=0;
-    int assignments =0 ;
+    int consistency = 0;
+    int assignments = 0;
+
     public TennerGridSolver(int rows, int[] Sums, Variable[][] unsolvedGrid) {
         this.rows = rows;
         this.grid = new Variable[rows][10];
@@ -26,20 +27,20 @@ public class TennerGridSolver {
 
         switch (type) {
             case 'B':
-                assignments=0;
+                assignments = 0;
                 startTime = System.nanoTime();
                 solved = backtrack(0, 0);
                 endTime = System.nanoTime();
                 break;
 
             case 'F':
-                assignments=0;
+                assignments = 0;
                 startTime = System.nanoTime();
                 solved = backtrackWithForwardChecking(0, 0);
                 endTime = System.nanoTime();
                 break;
             case 'M':
-                assignments=0;
+                assignments = 0;
                 int indices[] = findMRV();
                 startTime = System.nanoTime();
                 solved = ForwardCheckingwithMRV(indices[0], indices[1]);
@@ -55,8 +56,8 @@ public class TennerGridSolver {
         else {
             System.out.println("Time solving :  " + (endTime - startTime) / 1000000.0 + " milliseconds");
 
-             System.out.println("Number of assignments :  " + assignments );
-             System.out.println("Number of consistency checks :  " + consistency );
+            System.out.println("Number of assignments :  " + assignments);
+            System.out.println("Number of consistency checks :  " + consistency);
 
         }
         return solved;
@@ -119,9 +120,10 @@ public class TennerGridSolver {
     public boolean ForwardChecking(int row, int col) {
         int value = grid[row][col].value;
         // check that no varible would have domain size =0
-        for (int i = col + 1; i < 10; i++) {
-            if (grid[row][i].noPossibleAssignment(value))
-                return false;
+        for (int i = 0; i < 10; i++) {
+            if (grid[row][i].value == -1 && i != col)
+                if (grid[row][i].noPossibleAssignment(value))
+                    return false;
 
         }
 
@@ -136,8 +138,8 @@ public class TennerGridSolver {
             }
         }
         // remove
-        for (int i = col + 1; i < 10; i++) {
-            if (grid[row][i].value == -1)
+        for (int i = 0; i < 10; i++) {
+            if (grid[row][i].value == -1 && i != col)
                 grid[row][i].removeFromDomain(value);
         }
         for (int[] d : directions) {
@@ -196,25 +198,25 @@ public class TennerGridSolver {
     }
 
     public boolean isSafe(int row, int col, int value) {
-      
+
         if (row == 0 && value == sums[col]) {
             consistency++;
             return false;
         }
         for (int i = 0; i < 10; i++) {
-            
+
             if (grid[row][i].value == value) {
                 consistency++;
                 return false;
             }
         }
 
-        int[][] directions = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+        int[][] directions = { { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
         for (int[] d : directions) {
             int drow = row + d[0];
             int dcol = col + d[1];
             if (drow >= 0 && drow < rows && dcol >= 0 && dcol < 10) {
-                
+
                 if (grid[drow][dcol].value == value) {
                     consistency++;
                     return false;
@@ -237,7 +239,7 @@ public class TennerGridSolver {
             }
         }
         if (tempSum > sums[col]) {
-        
+
             return false;
         }
 
@@ -249,7 +251,6 @@ public class TennerGridSolver {
 
         return true;
     }
-
 
     public boolean verifySums() {
         for (int col = 0; col < 10; col++) {

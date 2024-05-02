@@ -2,6 +2,7 @@ public class TennerGridSolver {
     Variable[][] grid; // grid of variables
     int[] sums; // goal sums for each column
     int rows;
+    int consistency=0;
     int assignments =0 ;
     public TennerGridSolver(int rows, int[] Sums, Variable[][] unsolvedGrid) {
         this.rows = rows;
@@ -55,6 +56,7 @@ public class TennerGridSolver {
             System.out.println("Time solving :  " + (endTime - startTime) / 1000000.0 + " milliseconds");
 
              System.out.println("Number of assignments :  " + assignments );
+             System.out.println("Number of consistency checks :  " + consistency );
 
         }
         return solved;
@@ -194,51 +196,60 @@ public class TennerGridSolver {
     }
 
     public boolean isSafe(int row, int col, int value) {
-        if (row == 0 && value == sums[col])
+      
+        if (row == 0 && value == sums[col]) {
+            consistency++;
             return false;
-        // row constraintthe value is not already ther in same row
+        }
         for (int i = 0; i < 10; i++) {
-            if (grid[row][i].value == value)
+            
+            if (grid[row][i].value == value) {
+                consistency++;
                 return false;
+            }
         }
 
-        // check diagonal cells
-        int[][] directions = { { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } }; // directions
+        int[][] directions = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
         for (int[] d : directions) {
             int drow = row + d[0];
             int dcol = col + d[1];
-            // make sure the new position is within the grid bounds
             if (drow >= 0 && drow < rows && dcol >= 0 && dcol < 10) {
-                if (grid[drow][dcol].value == value)
+                
+                if (grid[drow][dcol].value == value) {
+                    consistency++;
                     return false;
+                }
             }
         }
-        if (row > 0 && grid[row - 1][col].value == value)
+        if (row > 0 && grid[row - 1][col].value == value) {
+            consistency++;
             return false;
-        // checking the cell directly below onlyy if not in the last row
-        if (row < rows - 1 && grid[row + 1][col].value == value)
+        }
+        if (row < rows - 1 && grid[row + 1][col].value == value) {
+            consistency++;
             return false;
+        }
 
-        // making sure adding doesn't exceed the goal sum for the column
         int tempSum = value;
         for (int i = 0; i < rows; i++) {
-            if (i != row)
+            if (i != row) {
                 tempSum += (grid[i][col].value != -1) ? grid[i][col].value : 0;
+            }
         }
-        if (tempSum > sums[col])
+        if (tempSum > sums[col]) {
+        
             return false;
+        }
 
-        // future possibility check for column sum
-        int maxPossSum = tempSum; // Start with the current sum including 'value'
-        int remainingCells = rows - 1 - row; // cells below the current one
-        // calculate the maximum possible sum for the column assuming remaining cells
-        // take the highest value which is9
-        maxPossSum += remainingCells * 9;
-        if (maxPossSum < sums[col])
-            return false; // if even the max possible sum is less than the target its not safe
+        int maxPossSum = tempSum + ((rows - 1 - row) * 9);
+        if (maxPossSum < sums[col]) {
+
+            return false; // if even the max possible sum is less than the target it's not safe
+        }
 
         return true;
     }
+
 
     public boolean verifySums() {
         for (int col = 0; col < 10; col++) {

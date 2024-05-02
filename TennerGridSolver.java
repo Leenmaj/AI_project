@@ -36,7 +36,10 @@ public class TennerGridSolver {
                 endTime = System.nanoTime();
                 break;
             case 'M':
-                // solved= MRV method
+                startTime = System.nanoTime();
+                solved = ForwardCheckingwithMRV(0, 0);
+                endTime = System.nanoTime();
+                break;
             default:
                 break;
         }
@@ -119,6 +122,63 @@ public class TennerGridSolver {
 
         return true;
 
+    }
+
+    public boolean ForwardCheckingwithMRV(int row, int col) {
+
+        if (row == rows)
+            return verifySums();
+        if (col == 10)
+            return ForwardCheckingwithMRV(row + 1, 0);
+        if (grid[row][col].filledCell)
+            return ForwardCheckingwithMRV(row, col + 1);
+
+        // Find cell with minimum remaining values
+        int MRV = Integer.MAX_VALUE;
+        int mrvRow = -1, mrvCol = -1;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (grid[i][j].value == -1) {
+                    int min = grid[i][j].domSize;
+                    if (min < MRV) {
+                        MRV = min;
+                        mrvRow = i;
+                        mrvCol = j;
+                    }
+                }
+            }
+        }
+        Variable[][] gridClone = new Variable[rows][10];
+        copygrid(gridClone, grid);
+
+        // Try all remaining values for the MRV cell
+        for (int val = 0; val < grid[mrvRow][mrvCol].domSize; val++) {
+            // Check if the value is safe before assigning
+            if (isSafe(mrvRow, mrvCol, grid[mrvRow][mrvCol].domain[val])) {
+                grid[mrvRow][mrvCol].value = grid[mrvRow][mrvCol].domain[val];
+
+                if (ForwardChecking(mrvRow, mrvCol)) { // Call ForwardChecking here
+                    if (ForwardCheckingwithMRV(row, col + 1))
+                        return true;
+                }
+
+            }
+
+            copygrid(grid, gridClone);
+        }
+
+        return false;
+    }
+
+    public int countRemainingValues(int row, int col) {
+        // RV stands for remaining values , counter counts how many valid value remained
+        // in cell i,j
+        int RVCounter = 0;
+        for (int k : grid[row][col].domain) {
+            if (isSafe(row, col, k))
+                RVCounter++;
+        }
+        return RVCounter;
     }
 
     public boolean isSafe(int row, int col, int value) {
@@ -242,4 +302,13 @@ public class TennerGridSolver {
      * System.out.println("\n-----------------------------");
      * }
      */
+
+    void copygrid(Variable[][] gridClone, Variable[][] grid) {
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < 10; j++) {
+                gridClone[i][j] = new Variable(grid[i][j].value, grid[i][j].domain,
+                        grid[i][j].domSize, grid[i][j].filledCell);
+            }
+    }
+
 }

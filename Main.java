@@ -27,5 +27,14 @@ public class Main {
         } else {
             System.out.println("failed to solve the tenner grid with forward Checking");
         }
+
+        if (solver3.solve('M')) {
+            System.out.println("Solved Tenner grid with MRV");
+            solver2.printGrid();
+
+        } else {
+            System.out.println("failed to solve the tenner grid with MRV");
+
+        }
     }
 }

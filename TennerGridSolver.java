@@ -2,7 +2,7 @@ public class TennerGridSolver {
     Variable[][] grid; // grid of variables
     int[] sums; // goal sums for each column
     int rows;
-
+    int assignments =0 ;
     public TennerGridSolver(int rows, int[] Sums, Variable[][] unsolvedGrid) {
         this.rows = rows;
         this.grid = new Variable[rows][10];
@@ -25,17 +25,20 @@ public class TennerGridSolver {
 
         switch (type) {
             case 'B':
+                assignments=0;
                 startTime = System.nanoTime();
                 solved = backtrack(0, 0);
                 endTime = System.nanoTime();
                 break;
 
             case 'F':
+                assignments=0;
                 startTime = System.nanoTime();
                 solved = backtrackWithForwardChecking(0, 0);
                 endTime = System.nanoTime();
                 break;
             case 'M':
+                assignments=0;
                 int indices[] = findMRV();
                 startTime = System.nanoTime();
                 solved = ForwardCheckingwithMRV(indices[0], indices[1]);
@@ -50,6 +53,9 @@ public class TennerGridSolver {
 
         else {
             System.out.println("Time solving :  " + (endTime - startTime) / 1000000.0 + " milliseconds");
+
+             System.out.println("Number of assignments :  " + assignments );
+
         }
         return solved;
     }
@@ -68,9 +74,11 @@ public class TennerGridSolver {
 
             if (isSafe(row, col, val)) {
                 grid[row][col].value = val;
+                assignments++;
                 if (backtrack(row, col + 1))
                     return true;
                 grid[row][col].value = -1; // backtracking step
+                assignments++;
             }
         }
 
@@ -91,10 +99,12 @@ public class TennerGridSolver {
 
             if (isSafe(row, col, val)) {
                 grid[row][col].value = val;
+                assignments++;
                 if (ForwardChecking(row, col)) {
                     if (backtrackWithForwardChecking(row, col + 1))
                         return true;
                     copygrid(grid, gridClone);
+                    assignments++;
 
                 }
 
@@ -165,6 +175,7 @@ public class TennerGridSolver {
             int val = grid[row][col].domain[i];
             if (isSafe(row, col, val)) {
                 grid[row][col].value = val;
+                assignments++;
                 if (ForwardChecking(row, col)) { // Call ForwardChecking here
                     int[] indices = findMRV();
                     int mrvRow = indices[0];
@@ -174,6 +185,7 @@ public class TennerGridSolver {
                 }
 
                 copygrid(grid, gridClone);
+                assignments++;
             }
 
         }

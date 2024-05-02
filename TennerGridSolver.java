@@ -80,7 +80,7 @@ public class TennerGridSolver {
         if (row == rows)
             return verifySums();
         if (col == 10)
-            return backtrack(row + 1, 0);
+            return backtrackWithForwardChecking(row + 1, 0);
         if (grid[row][col].filledCell)
             return backtrack(row, col + 1);
 
@@ -91,7 +91,7 @@ public class TennerGridSolver {
 
             if (isSafe(row, col, val)) {
                 grid[row][col].value = val;
-                if (backtrack(row, col + 1))
+                if (backtrackWithForwardChecking(row, col + 1))
                     return true;
                 grid[row][col].value = -1; // backtracking step
             }
@@ -156,7 +156,6 @@ public class TennerGridSolver {
             // Check if the value is safe before assigning
             if (isSafe(mrvRow, mrvCol, grid[mrvRow][mrvCol].domain[val])) {
                 grid[mrvRow][mrvCol].value = grid[mrvRow][mrvCol].domain[val];
-
                 if (ForwardChecking(mrvRow, mrvCol)) { // Call ForwardChecking here
                     if (ForwardCheckingwithMRV(row, col + 1))
                         return true;

@@ -36,9 +36,8 @@ public class TennerGridSolver {
                 endTime = System.nanoTime();
                 break;
             case 'M':
-                int indices[] = findMRV();
                 startTime = System.nanoTime();
-                solved = ForwardCheckingwithMRV(indices[0], indices[1]);
+                solved = ForwardCheckingwithMRV(0, 0);
                 endTime = System.nanoTime();
                 break;
             default:

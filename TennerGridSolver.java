@@ -186,9 +186,10 @@ public class TennerGridSolver {
                     int mrvCol = indices[1];
                     if (ForwardCheckingwithMRV(mrvRow, mrvCol))
                         return true;
+                    copygrid(grid, gridClone);
+
                 }
 
-                copygrid(grid, gridClone);
                 assignments++;
             }
 

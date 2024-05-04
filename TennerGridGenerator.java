@@ -2,7 +2,6 @@ import java.util.Random;
 
 public class TennerGridGenerator {
     Variable[][] grid; // grid of variables
-
     int[] sums;
     Random rand = new Random();
     final int rows = 3;

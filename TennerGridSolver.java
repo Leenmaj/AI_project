@@ -290,8 +290,6 @@ public class TennerGridSolver {
         System.out.println("\n");
     }
 
-
-
     void copygrid(Variable[][] gridClone, Variable[][] grid) {
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < 10; j++) {
